@@ -12,15 +12,28 @@ module.exports = {
 	},
 	performance: {
 		maxAssetSize: 1000000,
+		hints: false,
+		maxEntrypointSize: 1000000,
 	},
+	plugins: [ new CleanWebpackPlugin(), newHtmlWebpackPlugin() ],
+	optimization: {
+		splitChunks: {
+			chunks: 'all',
+		},
+	},
+	devServer: {
+		contentBase: path.join(__dirname, './public'),
+		compress: true,
+		port: 8564,
+	}
 	output: {
-		filename: 'bundle.js',
+		filename: '[name].bundle.js',
 		path: path.resolve(__dirname, 'public')
 	},
 	module: {
 		rules: [
 			{
-				test: /\.css$/,
+				test: /\.css$/i,
 				use: ["style-loader", "css-loader"]
 			},
 			{
