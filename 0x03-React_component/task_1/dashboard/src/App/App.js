@@ -22,7 +22,7 @@ class App extends React.Component() {
 		if (event.ctrlkey && event.key === 'h') {
 			event.preventDefault();
 			alert('Logging you out');
-			this.props.logOut()
+			this.props.logOut();
 		}
 	}
 	render() {
