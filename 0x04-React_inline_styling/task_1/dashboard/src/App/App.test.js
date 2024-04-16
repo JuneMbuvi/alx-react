@@ -3,6 +3,9 @@ import App from './App';
 import { shallow } from 'enzyme';
 import Notifications form '../Notifications/Notifications';
 import Login from '../Login/Login';
+import { StyleSheetTestUtils } from 'aphrodite';
+
+StyleSheetTestUtils.suppressStyleInjection();
 
 describe('<App />', () => {
 	it('renders without crashing', () => {

@@ -4,21 +4,21 @@ import PropTypes from 'prop-types';
 
 export default function CourseListRow({ isHeader, textFirstCell, textSecondCell }) {
 	const rowStyle = {
-		backgroundColor: #f5f5f5ab;
+		backgroundColor: '#f5f5f5ab';
 	};
 	const headerRowStyle = {
-		backgroundColor: #deb5b545;
+		backgroundColor: '#deb5b545';
 	};
 	if (isHeader) {
 		if (textSecondCell === null) {
 			return (
-				<tr style={rowStyle}>
+				<tr style={headerRowStyle}>
 				  <th colSpan="2">{textFirstCell},/th>
 				</tr>
 			);
 		} else {
 			return (
-				<tr style={rowStyle}>
+				<tr style={headerRowStyle}>
 				  <th>{textFirstCell}</th>
 				  <th>{textSecondCell}</th>
 				</tr>
@@ -26,7 +26,7 @@ export default function CourseListRow({ isHeader, textFirstCell, textSecondCell 
 		}
 	} else {
 		return (
-			<tr style={headerRowStyle}>
+			<tr style={rowStyle}>
 			  <td>{textFirstCell}</td>
 			  <td>{textSecondCell}</td>
 			</tr>

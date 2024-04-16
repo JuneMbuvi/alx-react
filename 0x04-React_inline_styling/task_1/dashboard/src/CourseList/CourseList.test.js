@@ -1,7 +1,9 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 import CourseList from './CourseList';
+import { StyleSheetTestUtils } from 'aphrodite';
 
+StyleSheetTestUtils.suppressStyleInjection();
 
 describe("<CourseList />", () => {
 	it("renders CourseList component without crashing", () => {
