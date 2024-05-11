@@ -38,12 +38,12 @@ const mapDispatchToProps = {
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.handleKeyDown = this.handleKeyDown.bind(this)
-		this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this)
-		this.handleHideDrawer = this.handleHideDrawer.bind(this)
-		this.logOut = this.logOut.bind(this)
-		this.logIn = this.logIn.bind(this),
-		this.markNotificationAsRead = this.markNotificationAsRead.bind(this)
+		// this.handleKeyDown = this.handleKeyDown.bind(this)
+		// this.handleDisplayDrawer = this.handleDisplayDrawer.bind(this)
+		// this.handleHideDrawer = this.handleHideDrawer.bind(this)
+		// this.logOut = this.logOut.bind(this)
+		// this.logIn = this.logIn.bind(this),
+		// this.markNotificationAsRead = this.markNotificationAsRead.bind(this)
 		this.state = {
 			displayDrawer: false,
 			user,
@@ -71,9 +71,6 @@ class App extends React.Component {
 			logOut();
 		}
 	}
-	handleDisplayDrawer() {
-		this.setState({ displayDrawer: true });
-	}
 	logOut() {
 		this.setState({ user })
 	}
@@ -84,9 +81,6 @@ class App extends React.Component {
 				password,
 				isLoggedIn: true,
 			}
-	}
-	handleHideDrawer() {
-		this.setState({ displayDrawer: false }) 
 	}
 	markNotificationAsRead(id) {
 		const newNotification = this.state.listNotifications.filter((not) => {
@@ -102,8 +96,8 @@ class App extends React.Component {
 			<Notifications
 			listNotifications={listNotifications}
 			displayDrawer={displayDrawer}
-			handleDisplayDrawer={this.handleDisplayDrawer}
-			handleHideDrawer={this.handleHideDrawer}
+			handleDisplayDrawer={handleDisplayDrawer}
+			handleHideDrawer={handleHideDrawer}
 			markNotificationAsRead={this.markNotificationAsRead}
 			/>
 				<div className="App">
