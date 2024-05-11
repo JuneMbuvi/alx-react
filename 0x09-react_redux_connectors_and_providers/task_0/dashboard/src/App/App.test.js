@@ -5,6 +5,7 @@ import Notifications from '../Notifications/Notifications';
 import Login from '../Login/Login';
 import { StyleSheetTestUtils } from 'aphrodite';
 import { render, fireEvent } from '@testing-library/react';
+import { fromJS } from 'immutable';
 
 StyleSheetTestUtils.suppressStyleInjection();
 
@@ -129,5 +130,16 @@ describe('<App />', () => {
 		});
 		wrapper.instance().markNotificationAsRead(2);
 		expect(wrapper.state().listNotifications).toEqual([])
+	});
+});
+describe('mapStateToProps', () => {
+	it('returns the right object when passing the state', () => {
+		const state = fromJS({
+			isUserLoggedIn: true,
+		});
+		const props = mapStateToProps(state);
+		expect(props).toEqual({
+			isLoggedIn: true,
+		});
 	});
 });
