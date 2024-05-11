@@ -31,7 +31,10 @@ const mapStateToProps = (state) => {
 		displayDrawer: state.uiReducer.isNotificationDrawerVisible,
 	};
 };
-const ConnectedApp = connect(mapStateToProps)(App);
+const mapDispatchToProps = {
+	displayNotificationDrawer,
+	hideNotificationDrawer,
+};
 class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -93,7 +96,7 @@ class App extends React.Component {
 		})
 	}
 	render() {
-		const { displayDrawer } = this.props;
+		const { displayDrawer, displayNotificationDrawer, hideNotificationDrawer  } = this.props;
 		return (
 			<AppContext.Provider value={{user: this.state.user, logOut: this.state.logOut}}>
 			<Notifications
@@ -169,4 +172,4 @@ App.propTypes = {
 	logout: PropTypes.func
 };
 
-export default ConnectedApp;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
