@@ -10,6 +10,8 @@ import BodySection from "../BodySection/BodySection";
 import BodySectionWithMarginBottom from "../BodySection/BodySectionWithMarginBottom";
 import { StyleSheet, css } from 'aphrodite';
 import { user, logOut, AppContext } from "./AppContext";
+import { connect } from 'react-redux';
+import { uiReducer } from './reducers/uiReducer';
 
 const styles = StyleSheet.create({
 	body: {
@@ -23,6 +25,12 @@ const styles = StyleSheet.create({
 		fontWeight: '600'
 	},
 });
+const mapStateToProps = (state) => {
+	return {
+		isLoggedIn: state.uiReducer.isLoggedIn,
+	};
+};
+const ConnectedApp = connect(mapStateToProps)(App);
 class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -160,4 +168,4 @@ App.propTypes = {
 	logout: PropTypes.func
 };
 
-export default App;
+export default ConnectedApp;
