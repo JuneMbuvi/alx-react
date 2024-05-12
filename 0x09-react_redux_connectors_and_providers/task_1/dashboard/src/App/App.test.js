@@ -6,10 +6,25 @@ import Login from '../Login/Login';
 import { StyleSheetTestUtils } from 'aphrodite';
 import { render, fireEvent } from '@testing-library/react';
 import { fromJS } from 'immutable';
+import configureStore from 'redux-mock-store';
 
 StyleSheetTestUtils.suppressStyleInjection();
 
+
+const mockStore = configureStore([]);
+
+
 describe('<App />', () => {
+	let store;
+	beforeEach(() => {
+		const initialState = {
+			uiReducer: fromJS({
+				isLoggedIn: true,
+				isNotificationDrawerVisible: true,
+			});
+		};
+		store = mockStore(initialState);
+	});
 	it('renders without crashing', () => {
 		const wrapper = shallow(<App />);
 		expect(wrapper.exists()).toBe(true);
