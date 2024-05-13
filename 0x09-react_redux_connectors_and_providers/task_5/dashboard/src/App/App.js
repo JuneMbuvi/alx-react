@@ -66,13 +66,6 @@ class App extends React.Component {
 				isLoggedIn: true
 			}
 	}
-	markNotificationAsRead(id) {
-		const newNotification = this.state.listNotifications.filter((not) => {
-			not.id !== id})
-		this.setState({
-			listNotifications: newNotification
-		})
-	}
 	render() {
 		const { displayDrawer } = this.state;
 		return (
