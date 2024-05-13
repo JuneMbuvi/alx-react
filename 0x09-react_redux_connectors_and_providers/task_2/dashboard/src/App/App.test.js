@@ -1,29 +1,23 @@
 import React from 'react';
-import App from './App';
+import { App, mapStateToProps }from './App';
 import { shallow } from 'enzyme';
 import Notifications from '../Notifications/Notifications';
 import Login from '../Login/Login';
 import { StyleSheetTestUtils } from 'aphrodite';
 import { render, fireEvent } from '@testing-library/react';
-import { fromJS } from 'immutable';
-import configureStore from 'redux-mock-store';
+import uiReducer from "../reducers/uiReducer";
+
 
 StyleSheetTestUtils.suppressStyleInjection();
 
-
-const mockStore = configureStore([]);
-
-
 describe('<App />', () => {
-	let store;
+	const wrapper;
 	beforeEach(() => {
-		const initialState = {
-			uiReducer: fromJS({
-				isLoggedIn: true,
-				isNotificationDrawerVisible: true,
-			});
-		};
-		store = mockStore(initialState);
+		const store = createStore(uiReducer);
+		wrapper = mount(
+			<Provider store={store}>
+				<App />
+			</Provider>
 	});
 	it('renders without crashing', () => {
 		const wrapper = shallow(<App />);
@@ -146,15 +140,11 @@ describe('<App />', () => {
 		wrapper.instance().markNotificationAsRead(2);
 		expect(wrapper.state().listNotifications).toEqual([])
 	});
-});
-describe('mapStateToProps', () => {
-	it('returns the right object when passing the state', () => {
-		const state = fromJS({
+	it("verifies that the function returns the right object", () => {
+		let state = fromJS({
 			isUserLoggedIn: true,
 		});
-		const props = mapStateToProps(state);
-		expect(props).toEqual({
-			isLoggedIn: true,
-		});
+		const result = mapStateToProps(state);
+		expect(result).toEqual({ isLoggedIn: true })
 	});
 });
