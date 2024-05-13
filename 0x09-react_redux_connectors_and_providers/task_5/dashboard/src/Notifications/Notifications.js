@@ -43,6 +43,9 @@ class Notifications extends React.PureComponent {
   constructor(props) {
     super(props);
   }
+  componentDidMount() {
+	  this.props.fetchNotifications();
+  }
 
   render() {
     const {
@@ -95,6 +98,16 @@ class Notifications extends React.PureComponent {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+	listNotifications: state.notifications.list
+});
+
+const mapDispatchToProps = {
+	fetchNotifications
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Notification);
 
 Notifications.defaultProps = {
   displayDrawer: false,
