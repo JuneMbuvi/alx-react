@@ -1,90 +1,108 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Notifications from './Notifications'
+import Notifications from './Notifications';
 import NotificationItem from './NotificationItem';
-import { getLatestNotification } from "../utils/utils";
 import { StyleSheetTestUtils } from 'aphrodite';
 
-StyleSheetTestUtils.suppressStyleInjection();
+beforeEach(() => {
+	StyleSheetTestUtils.suppressStyleInjection();
+});
+afterEach(() => {
+	StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+});
 
-const htmlObj = {
-  __html: getLatestNotification(),
-};
 const listNotifications = [
-  {id: 1, type: 'default', value: 'New course available'},
-  {id: 2, type: 'urgent', value: 'New resume available'},
-  {id: 3, type: 'urgent', html: htmlObj},
+  { id: 1, type: "default", value: "New course available" },
+  { id: 2, type: "urgent", value: "New resume available" },
+  { id: 3, type: "urgent", html: getLatestNotification() },
 ];
 
 describe('<Notifications />', () => {
-  it('renders an <Notifications /> component', () => {
-    const wrapper = shallow(<Notifications />);
-    expect(wrapper).toHaveLength(1);
+	it('renders without crashing', () => {
+		const wrapper = shallow(<Notifications />);
+		expect(wrapper.exists).toBe(true);
 	});
-
-  it('render a Notifications component and check for 3 items', () => {
-    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
-    expect(wrapper.find(NotificationItem)).toHaveLength(3);
+	it('rendersNotificationItem', () => {
+                const wrapper = shallow(<Notifications />);
+                expect(wrapper.exists('NotificationItem')).toBe(true);
+        });
+	it('first NotificationItem renders the right html', () => {
+                const wrapper = shallow(<Notifications />);
+                expect(wrapper.html()).toContain('New course available');
+        });
+	it("renders menuitem when displayDrawer is false", () => {
+	  const wrapper = shallow(<Notifications />);
+	  expect(wrapper.find("div.menuItem")).toHaveLength(1);
 	});
-
-  it('render a Notifications component and verify text', () => {
-    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
-    expect(wrapper.find('.Notifications p')).toHaveLength(1);
-    expect(wrapper.find('.Notifications p').text()).toEqual('Here is the list of notifications')
+	it("renders nothing when isplayDrawer is false", () => {
+	  const wrapper = shallow(<Notifications />);
+	  expect(wrapper.find("div.Notifications")).toHaveLength(0);
 	});
-
-  it('render a Notifications component and verify html', () => {
-    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
-    expect(wrapper.find(NotificationItem).first().html()).toContain('New course available')
+	it("renders menuitem when displayDrawer is true", () => {
+	  const wrapper = shallow(<Notifications displayDrawer/>);
+	  expect(wrapper.find("div.menuItem")).toHaveLength(1);
 	});
-
-  it('ensure .menuItem is being displayed when displayDrawer is false', () => {
-    const wrapper = shallow(<Notifications />);
-    expect(wrapper.find('.menuItem')).toHaveLength(1);
+	it("renders div.Notifications when displayDrawer is true", () => {
+	  const wrapper = shallow(<Notifications displayDrawer/>);
+	  expect(wrapper.find("div.Notifications")).toHaveLength(1);
 	});
-
-  it('ensure div.Notifications is not being displayed when displayDrawer is false', () => {
-    const wrapper = shallow(<Notifications />);
-    expect(wrapper.find('.Notifications')).toHaveLength(0);
+	it("mockup the console.log function", () => {
+		const consoleLogSpy = jest.spyOn(console, 'log');
+		const wrapper = shallow(<Notification />);
+		const id = 123;
+		wrapper.instance().markAsRead(id);
+		expect(consoleLogSpy).toHaveBeenCalledWith(`Notification ${id} has been marked as read`);
+		consoleLogSpy.mockRestore();
 	});
-
-  it('ensure .menuItem is being displayed when displayDrawer is true', () => {
-    const wrapper = shallow(<Notifications displayDrawer={true} />);
-    expect(wrapper.find('.menuItem')).toHaveLength(1);
+	it('verifies that when updating the props of the component with the same list, the component doesn’t rerender', () => {
+		const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
+		const myComponentUpdate = jest.spyOn(Notifications.prototype, 'myComponentUpdate');
+		wrapper.setProps({ listNotifications: listNotificationsNoUpdated });
+		expect(myComponentUpdate).toHaveBeenCalled();
+		expect(myComponentUpdate).toHaveLastReturnedWith(false);
 	});
+	it('verifies that when updating the props of the component with the longer list, the component doesn’t rerender', () => {
+                const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
+                const myComponentUpdate = jest.spyOn(Notifications.prototype, 'myComponentUpdate');
+                wrapper.setProps({ listNotifications: listNotificationsNoUpdated });
+                expect(myComponentUpdate).toHaveBeenCalled();
+                expect(myComponentUpdate).toHaveLastReturnedWith(true);
+        });
+	it("verifies that clicking on the menu item calls handleDisplayDrawer", () => {
+		const handleDisplayDrawer = jest.fn();
+		const handleHideDrawer = jest.fn();
 
-  it('ensure div.Notifications is being displayed when displayDrawer is true', () => {
-    const wrapper = shallow(<Notifications displayDrawer={true} />);
-    expect(wrapper.find('.Notifications')).toHaveLength(1);
+		const wrapper = shallow(
+			<Notifications
+			handleDisplayDrawer={handleDisplayDrawer}
+			handleHideDrawer={handleHideDrawer}
+			/>
+		);
+
+		wrapper.find("#menuItem").simulate("click");
+
+		expect(handleDisplayDrawer).toHaveBeenCalled();
+		expect(handlHideDrawer).not.toHaveBeenCalled();
+
+		jest.restoreAllMocks();
 	});
+	it("verifies that clicking on the button calls handleHideDrawer", () => {
+		const handleDisplayDrawer = jest.fn();
+                const handleHideDrawer = jest.fn();
 
-  it('verify that Notifications render correctly', () => {
-    const wrapper = shallow(<Notifications displayDrawer={true} />);
-    expect(wrapper.find('.Notifications')).toHaveLength(1);
-    const wrapperTwo = shallow(<Notifications displayDrawer={true} listNotifications={[]} />);
-    expect(wrapperTwo.find('.Notifications')).toHaveLength(1);
-	});
+		const wrapper = shallow(
+                        <Notifications
+			displayDrawer
+                        handleDisplayDrawer={handleDisplayDrawer}
+                        handleHideDrawer={handleHideDrawer}
+                        />
+                );
 
-  it('verify that when you pass a list of notifications, the component render it correctly', () => {
-    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
-    expect(wrapper.find(NotificationItem)).toHaveLength(3);
-	});
+		wrapper.find("#closeNotifications").simulate("click");
 
-  it('verify that clicking on the menu item calls handleDisplayDrawer', () => {
-    const mockHandleDisplayDrawer = jest.fn();
-    const wrapper = shallow(<Notifications listNotifications={listNotifications} handleDisplayDrawer={mockHandleDisplayDrawer} />);
-    const spy = jest.spyOn(wrapper.instance().props, 'handleDisplayDrawer');
-    wrapper.find('.menuItem div').simulate('click');
-    expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
-	});
+                expect(handleDisplayDrawer).not.toHaveBeenCalled();
+                expect(handlHideDrawer).toHaveBeenCalled();
 
-  it('verify that clicking on the button calls handleHideDrawer', () => {
-    const mockHandleHideDrawer = jest.fn();
-    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} handleHideDrawer={mockHandleHideDrawer}/>);
-    const spy = jest.spyOn(wrapper.instance().props, 'handleHideDrawer');
-    wrapper.find('.Notifications button').simulate('click');
-    expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
+                jest.restoreAllMocks();
 	});
 });
